@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Cargar imagen · Earth Sonification Jukebox{% endblock %}
+
+{% block descripcion %}
+<p class="mb-0">
+  Sube una imagen desde tu computadora y escribe sus datos. Se guardará en la playlist y
+  podrás escucharla convertida en sonido con la escala pentatónica.
+</p>
+{% endblock %}
+
+{% block content %}
+<section class="card bg-body-tertiary border-0 shadow-sm" aria-labelledby="form-titulo">
+  <div class="card-body p-4">
+    <h2 id="form-titulo" class="h4 mb-4">Nueva imagen</h2>
+
+    <form method="post" enctype="multipart/form-data" novalidate>
+      <div class="mb-3">
+        <label for="titulo" class="form-label">Título</label>
+        <input type="text" id="titulo" name="titulo" maxlength="100" required
+               class="form-control {% if errores.titulo %}is-invalid{% endif %}"
+               value="{{ datos.titulo }}" placeholder="Ej. Huracán sobre el Golfo de México">
+        {% if errores.titulo %}<div class="invalid-feedback">{{ errores.titulo }}</div>{% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="ubicacion" class="form-label">Ubicación</label>
+        <input type="text" id="ubicacion" name="ubicacion" maxlength="150" required
+               class="form-control {% if errores.ubicacion %}is-invalid{% endif %}"
+               value="{{ datos.ubicacion }}" placeholder="Ej. Golfo de México, 24°N 90°O">
+        {% if errores.ubicacion %}<div class="invalid-feedback">{{ errores.ubicacion }}</div>{% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="descripcion" class="form-label">Descripción</label>
+        <textarea id="descripcion" name="descripcion" rows="3" maxlength="600" required
+                  class="form-control {% if errores.descripcion %}is-invalid{% endif %}"
+                  placeholder="Qué se ve en la imagen y qué datos representa">{{ datos.descripcion }}</textarea>
+        {% if errores.descripcion %}<div class="invalid-feedback">{{ errores.descripcion }}</div>{% endif %}
+      </div>
+
+      <div class="mb-4">
+        <label for="imagen" class="form-label">Imagen</label>
+        <input type="file" id="imagen" name="imagen" required
+               accept=".png,.jpg,.jpeg,.gif,.webp,.bmp,image/*"
+               class="form-control {% if errores.imagen %}is-invalid{% endif %}">
+        {% if errores.imagen %}
+          <div class="invalid-feedback">{{ errores.imagen }}</div>
+        {% else %}
+          <div class="form-text">PNG, JPG, GIF, WEBP o BMP · máximo 10 MB.</div>
+        {% endif %}
+        <img id="vista-previa" class="img-fluid rounded mt-3" alt="Vista previa de la imagen seleccionada" hidden>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-info fw-semibold px-4">Guardar en la playlist</button>
+        <a href="{{ url_for('playlist') }}" class="btn btn-outline-secondary">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Vista previa de la imagen elegida, antes de subirla
+  const input = document.getElementById("imagen");
+  const preview = document.getElementById("vista-previa");
+  input.addEventListener("change", () => {
+    const archivo = input.files[0];
+    if (preview.src) URL.revokeObjectURL(preview.src);
+    if (archivo && archivo.type.startsWith("image/")) {
+      preview.src = URL.createObjectURL(archivo);
+      preview.hidden = false;
+    } else {
+      preview.hidden = true;
+    }
+  });
+</script>
+{% endblock %}

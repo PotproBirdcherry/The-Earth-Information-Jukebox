@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}Playlist · Earth Sonification Jukebox{% endblock %}
+
+{% block head %}
+<style>
+  /* Escenario: imagen con el visualizador de audio encima */
+  .visual-stage { position: relative; background: #000; }
+  .visual-stage img { width: 100%; max-height: 420px; object-fit: contain; }
+  #audio-visualizer {
+    position: absolute; inset: auto 0 0 0;
+    width: 100%; height: 45%;
+    pointer-events: none;
+  }
+  /* Marca la columna de la imagen que está sonando */
+  #playhead {
+    position: absolute; top: 0; bottom: 0; left: 0;
+    background: rgba(79, 195, 247, .25);
+    border-left: 2px solid var(--ej-accent);
+    pointer-events: none;
+    transition: left .1s linear;
+  }
+  #seek-bar { accent-color: var(--ej-accent); }
+
+  /* Vista de alto contraste (tecla M): oculta lo puramente visual */
+  body.modo-enfoque {
+    --bs-body-bg: #000;
+    --bs-body-color: #fff;
+    --bs-tertiary-bg: #000;
+    --bs-secondary-color: #fff;
+    --ej-accent: #ffeb3b;
+    font-size: 1.15rem;
+  }
+  body.modo-enfoque .ej-header { background: #000; }
+  body.modo-enfoque .solo-visual { display: none !important; }
+  body.modo-enfoque .btn { border-width: 2px; }
+</style>
+{% endblock %}
+
+{% block descripcion %}
+<p class="mb-0">
+  Escucha cómo suena la Tierra: elige una imagen y el Jukebox la recorre de izquierda a derecha
+  convirtiéndola en una melodía con la escala pentatónica. Puedes usar el ratón o solo el teclado,
+  y activar la voz guía o la vista de alto contraste.
+</p>
+{% endblock %}
+
+{% block content %}
+{% if not imagenes %}
+  <div class="alert alert-info">
+    Todavía no hay imágenes en la playlist.
+    <a href="{{ url_for('cargar_imagen') }}" class="alert-link">Carga la primera imagen</a>.
+  </div>
+{% else %}
+<section aria-label="Reproductor de imágenes de la Tierra">
+  <!-- Aquí JS mete los textos para que el lector de pantalla los narre -->
+  <div id="live-announcer" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Selección de imagen y opciones de accesibilidad -->
+  <div class="row g-2 align-items-end mb-3">
+    <div class="col-12 col-md">
+      <label for="selector-imagen" class="form-label fw-semibold">Elige una imagen</label>
+      <select id="selector-imagen" class="form-select">
+        {% for imagen in imagenes %}
+          <option value="{{ imagen.id }}" {% if imagen.id == seleccionada %}selected{% endif %}>{{ imagen.titulo }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-12 col-md-auto d-flex flex-wrap gap-2">
+      <button id="btn-voice" class="btn btn-outline-light" aria-pressed="true"
+              aria-label="Voz guía, activar o desactivar. Tecla V">
+        Voz: Activada (V)
+      </button>
+      <button id="btn-mode" class="btn btn-outline-light"
+              aria-label="Cambiar entre vista normal y vista de alto contraste. Tecla M">
+        Vista: Normal (M)
+      </button>
+    </div>
+  </div>
+
+  <div class="card bg-body-tertiary border-0 shadow-sm overflow-hidden">
+    <div class="visual-stage">
+      <img id="nasa-image" src="" alt="" class="d-block mx-auto">
+      <div id="playhead" class="solo-visual" hidden></div>
+      <canvas id="audio-visualizer" class="solo-visual" aria-hidden="true"></canvas>
+    </div>
+
+    <div class="card-body p-4">
+      <!-- Título, ubicación y descripción: vienen de config/imagenes.json -->
+      <div class="d-flex flex-wrap gap-2 mb-2">
+        <span id="track-counter" class="badge rounded-pill text-bg-info"></span>
+        <span id="track-location" class="badge rounded-pill text-bg-secondary"></span>
+      </div>
+      <h2 id="track-title" class="h4 mb-2"></h2>
+      <p id="track-description" class="text-body-secondary mb-4"></p>
+
+      <div class="border border-accent rounded p-3 mb-4">
+        <strong>Cómo escuchar esto (tecla G para repetirlo):</strong>
+        <p id="track-legend" class="text-body-secondary mb-0">
+          Cada columna de la imagen, de izquierda a derecha, es una nota de la escala pentatónica
+          (Do, Re, Mi, Sol, La). Las zonas claras suenan agudas y las oscuras graves;
+          los colores intensos suenan más fuerte.
+        </p>
+      </div>
+
+      <!-- Barra de tiempo (solo en vista normal) -->
+      <div class="d-flex align-items-center gap-3 mb-2 solo-visual">
+        <label for="seek-bar" class="visually-hidden">Barra de tiempo de la pista</label>
+        <input type="range" id="seek-bar" class="form-range flex-grow-1" value="0" min="0" max="100" step="1">
+        <span id="time-display" class="font-monospace small text-body-secondary">00:00 / 00:00</span>
+      </div>
+      <p class="small text-body-secondary text-center mb-4 solo-visual">
+        Nota actual: <span id="current-note" class="font-monospace text-accent">—</span>
+      </p>
+
+      <!-- Controles principales (con teclado y ratón) -->
+      <div class="d-flex justify-content-center gap-2">
+        <button id="btn-prev" class="btn btn-outline-info" aria-label="Imagen anterior. Flecha izquierda">Anterior</button>
+        <button id="btn-play" class="btn btn-info px-4 fw-semibold" aria-pressed="false"
+                aria-label="Reproducir o pausar. Barra espaciadora" disabled>Cargando…</button>
+        <button id="btn-next" class="btn btn-outline-info" aria-label="Imagen siguiente. Flecha derecha">Siguiente</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="text-center text-body-secondary small mt-3">
+    Atajos: <strong>Flechas</strong> cambiar de imagen · <strong>Espacio</strong> play o pausa ·
+    <strong>G</strong> repetir la guía · <strong>V</strong> voz · <strong>M</strong> alto contraste
+  </p>
+</section>
+
+<!-- Datos de las imágenes (del archivo de configuración) para app.js -->
+<script id="imagenes-data" type="application/json">{{ imagenes | tojson }}</script>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if imagenes %}
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endif %}
+{% endblock %}

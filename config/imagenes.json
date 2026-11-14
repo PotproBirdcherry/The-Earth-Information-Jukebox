@@ -1,0 +1,16 @@
+[
+  {
+    "id": "ac43767c",
+    "titulo": "GEOS-FP Near-Surface Humidity",
+    "ubicacion": "Global",
+    "descripcion": "Near-surface humidity, also known as specific humidity (Q2M), measures the actual amount of water vapor present in the air near Earth's surface. This measurement tells us the exact mass of water vapor per unit of air mass, typically measured in grams per kilogram (g/kg).",
+    "archivo": "ac43767c_Humedad_NASA.png"
+  },
+  {
+    "id": "d8c27fff",
+    "titulo": "GEOS-FP Near-Surface Temperature",
+    "ubicacion": "Global",
+    "descripcion": "Weather models begin their forecasts by integrating observations from ground stations, aircraft, balloons, and a growing constellation of Earth observing satellites to estimate the most realistic atmospheric state. The Goddard Earth Observing System Forward Processing (GEOS-FP) system is a research model maintained by NASA’s Global Modeling and Assimilation Office to demonstrate innovative new ways to use satellite data to improve predictions of weather, air quality, and greenhouse gases and to help NASA collect new observations of our home planet.",
+    "archivo": "d8c27fff_Temperatura_NASA.png"
+  }
+]

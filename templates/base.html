@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" data-bs-theme="dark">
+<html lang="en" data-bs-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -45,21 +45,21 @@
   </header>
 
   <!-- Menú principal -->
-  <nav class="navbar navbar-expand-md bg-body-tertiary border-top border-bottom" aria-label="Menú principal">
+  <nav class="navbar navbar-expand-md bg-body-tertiary border-top border-bottom" aria-label="Main menu">
     <div class="container justify-content-center">
       <button class="navbar-toggler my-2" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
-              aria-controls="menuPrincipal" aria-expanded="false" aria-label="Mostrar menú">
+              aria-controls="menuPrincipal" aria-expanded="false" aria-label="Show menu">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse justify-content-center" id="menuPrincipal">
         <ul class="navbar-nav text-center fw-semibold">
           <li class="nav-item">
             <a class="nav-link px-4 {% if request and request.path == '/' %}active{% endif %}"
-               {% if request and request.path == '/' %}aria-current="page"{% endif %} href="/">Inicio</a>
+               {% if request and request.path == '/' %}aria-current="page"{% endif %} href="/">Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link px-4 {% if request and request.path == '/cargar-imagen' %}active{% endif %}"
-               {% if request and request.path == '/cargar-imagen' %}aria-current="page"{% endif %} href="/cargar-imagen">Cargar imagen</a>
+               {% if request and request.path == '/cargar-imagen' %}aria-current="page"{% endif %} href="/cargar-imagen">Upload image</a>
           </li>
           <li class="nav-item">
             <a class="nav-link px-4 {% if request and request.path == '/playlist' %}active{% endif %}"
@@ -80,7 +80,7 @@
       {% for categoria, mensaje in mensajes %}
         <div class="alert alert-{{ categoria if categoria != 'message' else 'info' }} alert-dismissible fade show" role="alert">
           {{ mensaje }}
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
       {% endfor %}
     {% endwith %}
@@ -89,10 +89,10 @@
     <section class="card bg-body-tertiary border-0 border-start border-4 border-accent shadow-sm mb-4"
              aria-labelledby="descripcion-titulo">
       <div class="card-body p-4">
-        <h2 id="descripcion-titulo" class="h5 text-accent">¿Para qué fue hecho?</h2>
+        <h2 id="descripcion-titulo" class="h5 text-accent">What is it for?</h2>
         <div class="text-body-secondary mb-0">
           {% block descripcion %}
-          <p class="mb-0">Escribe aquí una descripción breve del propósito del proyecto.</p>
+          <p class="mb-0">Write a short description of the purpose of the project here.</p>
           {% endblock %}
         </div>
       </div>

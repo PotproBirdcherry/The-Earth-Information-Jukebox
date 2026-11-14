@@ -5,20 +5,20 @@
 {% block head %}
 <style>
   /* Escenario: imagen con el visualizador de audio encima */
-  .visual-stage { position: relative; background: #000; }
-  .visual-stage img { width: 100%; max-height: 420px; object-fit: contain; }
+  .visual-stage { position: relative; background: #000; text-align: center; }
+  /* El contenedor mide exactamente lo mismo que la imagen, para que el recorrido coincida */
+  .imagen-wrap { position: relative; display: inline-block; max-width: 100%; vertical-align: top; }
+  .imagen-wrap img { display: block; max-width: 100%; max-height: 420px; width: auto; height: auto; }
   #audio-visualizer {
     position: absolute; inset: auto 0 0 0;
     width: 100%; height: 45%;
     pointer-events: none;
   }
-  /* Marca la columna de la imagen que está sonando */
-  #playhead {
-    position: absolute; top: 0; bottom: 0; left: 0;
-    background: rgba(79, 195, 247, .25);
-    border-left: 2px solid var(--ej-accent);
+  /* Marca la zona de la imagen que está sonando (columna, franja, anillo o celda) */
+  #recorrido-overlay {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
     pointer-events: none;
-    transition: left .1s linear;
   }
   #seek-bar { accent-color: var(--ej-accent); }
 
@@ -39,27 +39,28 @@
 
 {% block descripcion %}
 <p class="mb-0">
-  Escucha cómo suena la Tierra: elige una imagen y el Jukebox la recorre de izquierda a derecha
-  convirtiéndola en una melodía con la escala pentatónica. Puedes usar el ratón o solo el teclado,
-  y activar la voz guía o la vista de alto contraste.
+  Listen to what the Earth sounds like: choose an image and the Jukebox turns it into a melody
+  using the pentatonic scale. Pick how the image is played, and use the mouse or just the keyboard,
+  with an optional voice guide and a high-contrast view.
 </p>
 {% endblock %}
 
 {% block content %}
 {% if not imagenes %}
   <div class="alert alert-info">
-    Todavía no hay imágenes en la playlist.
-    <a href="{{ url_for('cargar_imagen') }}" class="alert-link">Carga la primera imagen</a>.
+    There are no images in the playlist yet.
+    <a href="{{ url_for('cargar_imagen') }}" class="alert-link">Upload the first image</a>.
   </div>
 {% else %}
-<section aria-label="Reproductor de imágenes de la Tierra">
+<section id="jukebox" aria-label="Earth image player"
+         data-sonidos="{{ url_for('static', filename='Sonidos/') }}">
   <!-- Aquí JS mete los textos para que el lector de pantalla los narre -->
   <div id="live-announcer" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
 
   <!-- Selección de imagen y opciones de accesibilidad -->
   <div class="row g-2 align-items-end mb-3">
     <div class="col-12 col-md">
-      <label for="selector-imagen" class="form-label fw-semibold">Elige una imagen</label>
+      <label for="selector-imagen" class="form-label fw-semibold">Choose an image</label>
       <select id="selector-imagen" class="form-select">
         {% for imagen in imagenes %}
           <option value="{{ imagen.id }}" {% if imagen.id == seleccionada %}selected{% endif %}>{{ imagen.titulo }}</option>
@@ -68,20 +69,49 @@
     </div>
     <div class="col-12 col-md-auto d-flex flex-wrap gap-2">
       <button id="btn-voice" class="btn btn-outline-light" aria-pressed="true"
-              aria-label="Voz guía, activar o desactivar. Tecla V">
-        Voz: Activada (V)
+              aria-label="Voice guide on or off. Key V">
+        Voice: On (V)
       </button>
       <button id="btn-mode" class="btn btn-outline-light"
-              aria-label="Cambiar entre vista normal y vista de alto contraste. Tecla M">
-        Vista: Normal (M)
+              aria-label="Switch between normal view and high-contrast view. Key M">
+        View: Normal (M)
       </button>
     </div>
   </div>
 
+  <!-- Opciones de sonido: cómo se convierte la imagen en sonido -->
+  <fieldset class="row g-2 align-items-center mb-3">
+    <legend class="visually-hidden">Sound options</legend>
+    <div class="col-12 col-md">
+      <label for="modo" class="form-label fw-semibold">Playback mode (keys 1–7, R for next)</label>
+      <select id="modo" class="form-select">
+        <option value="columnas" selected>1 · Columns (left to right)</option>
+        <option value="latitudes">2 · Top to bottom (latitudes)</option>
+        <option value="radar">3 · Radar (center outward)</option>
+        <option value="espiral">4 · Spiral (from the center)</option>
+        <option value="espectrograma">5 · Spectrogram (exact frequencies)</option>
+        <option value="acordes_columnas">6 · Chords by column (left to right)</option>
+        <option value="acordes_latitudes">7 · Chords by latitude (bottom to top)</option>
+      </select>
+    </div>
+    <div class="col-12 col-md-auto pt-md-4">
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="opt-textura">
+        <label class="form-check-label" for="opt-textura">Rhythm from texture (T)</label>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="opt-estereo">
+        <label class="form-check-label" for="opt-estereo">Left/right sound (E)</label>
+      </div>
+    </div>
+  </fieldset>
+
   <div class="card bg-body-tertiary border-0 shadow-sm overflow-hidden">
     <div class="visual-stage">
-      <img id="nasa-image" src="" alt="" class="d-block mx-auto">
-      <div id="playhead" class="solo-visual" hidden></div>
+      <div class="imagen-wrap">
+        <img id="nasa-image" src="" alt="">
+        <canvas id="recorrido-overlay" class="solo-visual" aria-hidden="true"></canvas>
+      </div>
       <canvas id="audio-visualizer" class="solo-visual" aria-hidden="true"></canvas>
     </div>
 
@@ -95,37 +125,35 @@
       <p id="track-description" class="text-body-secondary mb-4"></p>
 
       <div class="border border-accent rounded p-3 mb-4">
-        <strong>Cómo escuchar esto (tecla G para repetirlo):</strong>
-        <p id="track-legend" class="text-body-secondary mb-0">
-          Cada columna de la imagen, de izquierda a derecha, es una nota de la escala pentatónica
-          (Do, Re, Mi, Sol, La). Las zonas claras suenan agudas y las oscuras graves;
-          los colores intensos suenan más fuerte.
-        </p>
+        <strong>How to listen (press G to repeat):</strong>
+        <!-- El texto cambia según el modo y las opciones elegidas (app.js) -->
+        <p id="track-legend" class="text-body-secondary mb-0"></p>
       </div>
 
       <!-- Barra de tiempo (solo en vista normal) -->
       <div class="d-flex align-items-center gap-3 mb-2 solo-visual">
-        <label for="seek-bar" class="visually-hidden">Barra de tiempo de la pista</label>
+        <label for="seek-bar" class="visually-hidden">Track time bar</label>
         <input type="range" id="seek-bar" class="form-range flex-grow-1" value="0" min="0" max="100" step="1">
         <span id="time-display" class="font-monospace small text-body-secondary">00:00 / 00:00</span>
       </div>
       <p class="small text-body-secondary text-center mb-4 solo-visual">
-        Nota actual: <span id="current-note" class="font-monospace text-accent">—</span>
+        Current note: <span id="current-note" class="font-monospace text-accent">—</span>
       </p>
 
       <!-- Controles principales (con teclado y ratón) -->
       <div class="d-flex justify-content-center gap-2">
-        <button id="btn-prev" class="btn btn-outline-info" aria-label="Imagen anterior. Flecha izquierda">Anterior</button>
+        <button id="btn-prev" class="btn btn-outline-info" aria-label="Previous image. Left arrow">Previous</button>
         <button id="btn-play" class="btn btn-info px-4 fw-semibold" aria-pressed="false"
-                aria-label="Reproducir o pausar. Barra espaciadora" disabled>Cargando…</button>
-        <button id="btn-next" class="btn btn-outline-info" aria-label="Imagen siguiente. Flecha derecha">Siguiente</button>
+                aria-label="Play or pause. Space bar" disabled>Loading…</button>
+        <button id="btn-next" class="btn btn-outline-info" aria-label="Next image. Right arrow">Next</button>
       </div>
     </div>
   </div>
 
   <p class="text-center text-body-secondary small mt-3">
-    Atajos: <strong>Flechas</strong> cambiar de imagen · <strong>Espacio</strong> play o pausa ·
-    <strong>G</strong> repetir la guía · <strong>V</strong> voz · <strong>M</strong> alto contraste
+    Shortcuts: <strong>Arrows</strong> change image · <strong>Space</strong> play/pause ·
+    <strong>G</strong> repeat guide · <strong>1–7</strong> choose playback mode · <strong>R</strong> next mode ·
+    <strong>T</strong> texture · <strong>E</strong> left/right · <strong>V</strong> voice · <strong>M</strong> high contrast
   </p>
 </section>
 

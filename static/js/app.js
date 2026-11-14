@@ -68,6 +68,22 @@ const sonidosUI = {
   guia:  "Audio/ui-guia.wav"     // G button
 };
 
+const frecRespaldo = { play: 520, prev: 440, next: 660, pista: 600, modo_contraste: 780, modo_normal: 700, voz_on: 560, voz_off: 480, guia: 700 };
+
+function beep(freq) {
+  initAudioContext();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = "sine";
+  osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+  gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.12);
+}
+
 // Toca una nota de la escala pentatónica con un envolvente suave
 function playNote({ frecuencia, volumen }, duracion) {
   const t = audioCtx.currentTime;
@@ -251,9 +267,10 @@ function toggleVoice() {
   voiceEnabled = !voiceEnabled;
   btnVoice.setAttribute("aria-pressed", voiceEnabled);
   btnVoice.textContent = voiceEnabled ? "Voz: Activada (V)" : "Voz: Desactivada (V)";
-  if (voiceEnabled) {
-    announce("Voz guía activada.");
-  } else if ("speechSynthesis" in window) {
+
+  playEarcon(voiceEnabled ? "voz_on" : "voz_off");
+
+  if (!voiceEnabled && "speechSynthesis" in window) {
     window.speechSynthesis.cancel();
   }
 }

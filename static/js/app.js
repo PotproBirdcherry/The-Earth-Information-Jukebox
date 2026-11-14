@@ -57,15 +57,15 @@ function initAudioContext() {
 
 
 const sonidosUI = {
-  play:  "Audio/ui-play.wav", //listo
-  prev:  "Audio/ui-prev.wav", //listo
-  next:  "Audio/ui-next.wav", //listo
-  pista: "Audio/ui-pista.wav",   // listo
-  modo_contraste: "Audio/ui-modo-contraste.wav",  // listo
-  modo_normal:    "Audio/ui-modo-normal.wav",     // listo
-  voz_on:  "Audio/ui-voz-on.wav",    // listo
-  voz_off: "Audio/ui-voz-off.wav",   // listo
-  guia:  "Audio/ui-guia.wav"     // G button
+  play:  "/static/Audio/ui-play.wav",
+  prev:  "/static/Audio/ui-prev.wav",
+  next:  "/static/Audio/ui-next.wav",
+  pista: "/static/Audio/ui-pista.wav",
+  modo_contraste: "/static/Audio/ui-modo-contraste.wav",
+  modo_normal:    "/static/Audio/ui-modo-normal.wav",
+  voz_on:  "/static/Audio/ui-voz-on.wav",
+  voz_off: "/static/Audio/ui-voz-off.wav",
+  guia:  "/static/Audio/ui-guia.wav"
 };
 
 const frecRespaldo = { play: 520, prev: 440, next: 660, pista: 600, modo_contraste: 780, modo_normal: 700, voz_on: 560, voz_off: 480, guia: 700 };

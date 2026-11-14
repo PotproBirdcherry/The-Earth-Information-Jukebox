@@ -54,19 +54,19 @@ function initAudioContext() {
   }
 }
 
-function playEarcon(freq = 660) {
-  initAudioContext();
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.type = "sine";
-  osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-  gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-  osc.start();
-  osc.stop(audioCtx.currentTime + 0.12);
-}
+
+
+const sonidosUI = {
+  play:  "Audio/ui-play.wav", //listo
+  prev:  "Audio/ui-prev.wav", //listo
+  next:  "Audio/ui-next.wav", //listo
+  pista: "Audio/ui-pista.wav",   // listo
+  modo_contraste: "Audio/ui-modo-contraste.wav",  // listo
+  modo_normal:    "Audio/ui-modo-normal.wav",     // listo
+  voz_on:  "Audio/ui-voz-on.wav",    // listo
+  voz_off: "Audio/ui-voz-off.wav",   // listo
+  guia:  "Audio/ui-guia.wav"     // G button
+};
 
 // Toca una nota de la escala pentatónica con un envolvente suave
 function playNote({ frecuencia, volumen }, duracion) {
@@ -95,6 +95,16 @@ function announce(text) {
     utterance.rate = 1.05;
     window.speechSynthesis.speak(utterance);
   }
+}
+
+function playEarcon(nombre) {
+  const ruta = sonidosUI[nombre];
+  if (ruta) {
+    const s = new Audio(ruta);
+    s.play().catch(() => beep(frecRespaldo[nombre]));  // нет файла → писк
+    return;
+  }
+  beep(frecRespaldo[nombre] || 660);
 }
 
 function drawWave() {
@@ -219,7 +229,7 @@ function pauseCurrentTrack() {
 
 function togglePlay() {
   if (!sonido) return;
-  playEarcon(520);
+  playEarcon("play");
   isPlaying ? pauseCurrentTrack() : playCurrentTrack();
 }
 
@@ -229,9 +239,11 @@ function updatePlayState(playing) {
 }
 
 function toggleVisualMode() {
-  playEarcon(780);
   const isFocus = document.body.classList.toggle("modo-enfoque");
   btnMode.textContent = isFocus ? "Vista: Alto contraste (M)" : "Vista: Normal (M)";
+
+  playEarcon(isFocus ? "modo_contraste" : "modo_normal");
+
   announce(isFocus ? "Vista de alto contraste activada." : "Vista normal activada.");
 }
 
@@ -260,17 +272,17 @@ btnMode.addEventListener("click", toggleVisualMode);
 btnVoice.addEventListener("click", toggleVoice);
 
 selector.addEventListener("change", () => {
-  playEarcon(600);
+  playEarcon("pista");
   loadTrack(imagenes.findIndex(i => i.id === selector.value), false);
 });
 
 btnPrev.addEventListener("click", () => {
-  playEarcon(440);
+  playEarcon("prev");
   loadTrack((currentIndex - 1 + imagenes.length) % imagenes.length, true);
 });
 
 btnNext.addEventListener("click", () => {
-  playEarcon(660);
+  playEarcon("next");
   loadTrack((currentIndex + 1) % imagenes.length, true);
 });
 
@@ -296,7 +308,7 @@ document.addEventListener("keydown", (e) => {
   } else if (e.key.toLowerCase() === "v") {
     toggleVoice();
   } else if (e.key.toLowerCase() === "g") {
-    playEarcon(700);
+    playEarcon("guia");
     announce(legendEl.textContent.trim().replace(/\s+/g, " "));
   }
 });

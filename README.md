@@ -76,7 +76,7 @@ The jukebox can be used entirely with the keyboard alone and includes:
 | `←` `→` | Previous / next Image |
 | `1`–`7` | Choose playback mode |
 | `R` | Next mode |
-| `G` | Repete the listening guide |
+| `G` | Repeate the listening guide |
 | `T` | Activate/Desactivate texture |
 | `E` | Active/Desactivate right/left sound|
 | `V` | Activate/Desactivate sound |
@@ -85,7 +85,7 @@ The jukebox can be used entirely with the keyboard alone and includes:
 
 ## Included images
 
-The playlist included 5 global NASA visualization
+The playlist includes 5 global NASA visualizations
 
 1. GEOS-FP Near-Surface Humidity
 2. GEOS-FP Near-Surface Temperature
@@ -115,7 +115,7 @@ pip install -r requirements.txt
 python app.py
 ```
 
-Open **http://127.0.0.1:5000** in your browser. Headphones are recommended for the best experience.
+Open **http://127.0.0.1:5000** in your browser. Headphones are recommended for the better experience.
 
 ### ADDING IMAGES
 

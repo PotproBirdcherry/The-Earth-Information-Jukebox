@@ -16,7 +16,7 @@ The Earth Sonification Jukebox turns Earth data visualizations into sound synchr
 - In Mexico, the 2020 Population and Housing Census counted 6,179,890 people with disabilities (4.9% of the population). According to INEGI (Mexico's national statistics institute), about 44% of them have difficulty seeing.
 - For these people, most maps, charts and satellite images about climate and the environment are currently inaccessible.
 
-### Antecedents of sonification
+### Background of sonification
 
 NASA has already explored this path through its Universe of Sound program, which translates data from space telescopes into sound. A study published in 2024 in Frontiers in Communication surveyed 3,184 people, both sighted and blind or low-vision, and found:
 

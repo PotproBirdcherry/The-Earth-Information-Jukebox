@@ -148,8 +148,6 @@ Tech stack: Python · Flask · Pillow · JavaScript · Web Audio API · Web Spee
 
 ## Sonifying an image
 
-El impacto crece cuando la sonificación se aterriza en un lugar y un problema concretos, en lugar de quedarse en promedios globales:
-
 The impact grows when sonification is grounded in a specific place and problem, rather than staying at global averages:
 
 - Sonify variables such as precipitation, soil moisture or vegetation indices for a watershed or farming region, so people can hear how a drought developed year after year.

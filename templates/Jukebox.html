@@ -116,6 +116,23 @@
   </fieldset>
 
   <div class="card bg-body-tertiary border-0 shadow-sm overflow-hidden">
+    <!-- Información de la imagen: aparece antes de la imagen -->
+    <div class="card-body p-4 pb-3">
+      <!-- Título, ubicación y descripción: vienen de config/imagenes.json -->
+      <div class="d-flex flex-wrap gap-2 mb-2">
+        <span id="track-counter" class="badge rounded-pill text-bg-info"></span>
+        <span id="track-location" class="badge rounded-pill text-bg-secondary"></span>
+      </div>
+      <h2 id="track-title" class="h4 mb-2"></h2>
+      <p id="track-description" class="text-body-secondary mb-4"></p>
+
+      <div class="border border-accent rounded p-3 mb-0">
+        <strong>How to listen (press G to repeat):</strong>
+        <!-- El texto cambia según el modo y las opciones elegidas (app.js) -->
+        <p id="track-legend" class="text-body-secondary mb-0"></p>
+      </div>
+    </div>
+
     <div class="visual-stage">
       <div class="imagen-wrap">
         <img id="nasa-image" src="" alt="">
@@ -125,20 +142,6 @@
     </div>
 
     <div class="card-body p-4">
-      <!-- Título, ubicación y descripción: vienen de config/imagenes.json -->
-      <div class="d-flex flex-wrap gap-2 mb-2">
-        <span id="track-counter" class="badge rounded-pill text-bg-info"></span>
-        <span id="track-location" class="badge rounded-pill text-bg-secondary"></span>
-      </div>
-      <h2 id="track-title" class="h4 mb-2"></h2>
-      <p id="track-description" class="text-body-secondary mb-4"></p>
-
-      <div class="border border-accent rounded p-3 mb-4">
-        <strong>How to listen (press G to repeat):</strong>
-        <!-- El texto cambia según el modo y las opciones elegidas (app.js) -->
-        <p id="track-legend" class="text-body-secondary mb-0"></p>
-      </div>
-
       <!-- Barra de tiempo (solo en vista normal) -->
       <div class="d-flex align-items-center gap-3 mb-2 solo-visual">
         <label for="seek-bar" class="visually-hidden">Track time bar</label>
@@ -176,3 +179,4 @@
 <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 {% endif %}
 {% endblock %}
+  

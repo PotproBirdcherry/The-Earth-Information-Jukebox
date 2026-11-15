@@ -26,5 +26,12 @@
     "ubicacion": "Global",
     "descripcion": "This animation overlays total precipitation, including both rain and snow, atop simulated cloud fields shaded by their optical thickness. Precipitation patterns are shifting as a result of climate change because warmer temperatures allow the atmosphere to evaporate and store more water vapor.",
     "archivo": "fb3a9a0e_Precipitaciones_y_nubes_NASA.png"
+  },
+  {
+    "id": "90230e4e",
+    "titulo": "Global Sea Surface Currents and Temperature",
+    "ubicacion": "Global",
+    "descripcion": "Global sea surface currents colored by temperature. These are the assembled (contiguous) versions of the animation. There are several resolutions to choose from, some are cropped for various purposes.",
+    "archivo": "90230e4e_TemperaturasOceano_NASA.png"
   }
 ]

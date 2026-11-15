@@ -79,6 +79,7 @@ const btnPlay = document.getElementById("btn-play");
 const btnPrev = document.getElementById("btn-prev");
 const btnNext = document.getElementById("btn-next");
 const btnMode = document.getElementById("btn-mode");
+const btnBars = document.getElementById("btn-bars");
 const btnVoice = document.getElementById("btn-voice");
 const titleEl = document.getElementById("track-title");
 const locationEl = document.getElementById("track-location");
@@ -515,6 +516,15 @@ function toggleVisualMode() {
   announce(isFocus ? "High-contrast view on." : "Normal view on.");
 }
 
+// Muestra u oculta la barra de sonido que aparece sobre la imagen
+function toggleBarras() {
+  const visibles = canvas.classList.toggle("d-none") === false;
+  btnBars.setAttribute("aria-pressed", visibles);
+  btnBars.textContent = visibles ? "Sound bars: On (B)" : "Sound bars: Off (B)";
+  playEarcon(visibles ? 700 : 500);
+  announce(visibles ? "Sound bars shown." : "Sound bars hidden.");
+}
+
 function toggleVoice() {
   voiceEnabled = !voiceEnabled;
   btnVoice.setAttribute("aria-pressed", voiceEnabled);
@@ -539,6 +549,7 @@ function formatTime(sec) {
 btnPlay.addEventListener("click", togglePlay);
 btnMode.addEventListener("click", toggleVisualMode);
 btnVoice.addEventListener("click", toggleVoice);
+btnBars.addEventListener("click", toggleBarras);
 
 selector.addEventListener("change", () => {
   playEarcon(600);
@@ -595,6 +606,8 @@ document.addEventListener("keydown", (e) => {
     toggleVisualMode();
   } else if (tecla === "v") {
     toggleVoice();
+  } else if (tecla === "b") {
+    toggleBarras();
   } else if (tecla === "g") {
     playEarcon(700);
     announce(textoGuia());

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block descripcion %}
+<h3 class="h6 text-body fw-bold mt-1">Listening to the Planet</h3>
+<p>
+  The central idea behind the project is simple. Information about the state of the planet is conveyed
+  almost exclusively through images—drought maps, temperature anomalies, time series, and satellite
+  images—which are currently, for the most part, inaccessible to people with visual impairments.
+  An “Earth jukebox,” which converts observational data—such as temperature, precipitation, snow,
+  humidity, and many other factors—into sound synchronized with its visual representation, opens up
+  a second channel of access: the ear.
+</p>
+
+<h3 class="h6 text-body fw-bold mt-4">How to use the jukebox?</h3>
+<div class="d-flex flex-wrap gap-2 mb-4">
+  <a href="{{ url_for('cargar_imagen') }}" class="btn btn-info fw-semibold">Upload an image</a>
+  <a href="{{ url_for('playlist') }}" class="btn btn-outline-info fw-semibold">Go to the playlist</a>
+</div>
+
+<p>
+  NASA has already explored this path with its <em>Universe of Sound</em> program, which translates data
+  from space telescopes into sound. A study published in 2024 in <em>Frontiers in Communication</em>
+  surveyed 3,184 people—both sighted and visually impaired—and found:
+</p>
+<ul class="mb-0">
+  <li>Significant improvements in participants’ perceived learning.</li>
+  <li>Positive responses regarding enjoyment of the experience.</li>
+  <li>
+    That engaging multiple senses creates new avenues of trust in scientific data, broadens access,
+    and raises awareness about accessibility among both the sighted public and people who are blind
+    or have low vision.
+  </li>
+</ul>
+{% endblock %}

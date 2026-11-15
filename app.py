@@ -425,7 +425,17 @@ def sonificar(ruta_imagen, modo="columnas", textura=False):
 # ---------------------------------------------------------------------------
 @app.route("/")
 def Inicio():
-    return render_template("base.html")
+    return render_template("index.html")
+
+
+@app.route("/about")
+def about():
+    # La foto del equipo se pone en static/equipo/ con el nombre "equipo" (jpg, jpeg, png o webp)
+    carpeta = BASE_DIR / "static" / "equipo"
+    foto = next((f"equipo/equipo.{ext}" for ext in ("jpg", "jpeg", "png", "webp")
+                 if (carpeta / f"equipo.{ext}").exists()), None)
+    return render_template("about.html",
+                           foto_equipo=url_for("static", filename=foto) if foto else None)
 
 
 @app.route("/playlist")

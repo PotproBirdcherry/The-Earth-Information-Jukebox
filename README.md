@@ -1,110 +1,103 @@
-# 🌎🎵 Earth Sonification Jukebox
+# Earth Sonification Jukebox
 
-**Escuchar el planeta: datos de observación de la Tierra convertidos en música.**
+**Listening to the planet: Earth observation data turned into music.**
 
-Proyecto para el **NASA Space Apps Challenge 2026** · Reto: *The Earth Information Jukebox*
+A project for the NASA Space Apps Challenge 2026 · Challenge: The Earth Information Jukebox*
 
+### The Idea
+---
+Information about the state of our planet (drought maps, temperature anomalies, time series, satellite imagery) is communicated almost exclusively through images, and that leaves many people out.
+
+The Earth Sonification Jukebox turns Earth data visualizations into sound synchronized with the image. This opens a second channel of access to the information: the ear.
 ---
 
-## La idea
+## Why does it matter?
+- The World Health Organization estimates that at least 2.2 billion people worldwide live with some form of vision impairment or blindness.
+- In Mexico, the 2020 Population and Housing Census counted 6,179,890 people with disabilities (4.9% of the population). According to INEGI (Mexico's national statistics institute), about 44% of them have difficulty seeing.
+- For these people, most maps, charts and satellite images about climate and the environment are currently inaccessible.
 
-La información sobre el estado del planeta (mapas de sequía, anomalías de temperatura, series de tiempo, imágenes satelitales) se comunica casi exclusivamente con imágenes, y eso deja fuera a muchas personas.
+### Antecedents of sonification
 
-El **Earth Sonification Jukebox** convierte visualizaciones de datos de la Tierra en sonido sincronizado con la imagen. Así abre un segundo canal de acceso a la información: **el oído**.
+NASA has already explored this path through its Universe of Sound program, which translates data from space telescopes into sound. A study published in 2024 in Frontiers in Communication surveyed 3,184 people, both sighted and blind or low-vision, and found:
 
-## ¿Por qué importa?
+- Significant gains in self-reported learning.
+- Positive responses regarding enjoyment of the experience.
+- That engaging multiple senses builds trust in scientific data, broadens access, and raises awareness of accessibility among both sighted audiences and people who are blind or have low vision.
 
-### El problema: los datos del planeta son solo visuales
+### Other benefits
+- Risk communication: a sound that grows more tense as a drought worsens or an anomaly increases can be understood without interpreting a chart or a color scale.
+- Education: hearing decades of data in a few seconds leaves a more lasting impression than a table of numbers.
+- Emotional connection: environmental change stops being an abstract number and becomes something you can perceive.
 
-- La Organización Mundial de la Salud estima que **al menos 2,200 millones de personas** en el mundo viven con algún tipo de discapacidad visual o ceguera.
-- En México, el Censo de Población y Vivienda 2020 registró **6,179,890 personas con discapacidad** (4.9 % de la población). De acuerdo con el INEGI, alrededor del **44 %** de ellas tiene dificultad para ver.
-- Para estas personas, la mayoría de los mapas, gráficas e imágenes satelitales sobre el clima y el ambiente son hoy inaccesibles.
+## What does the application do?
 
-### La evidencia: la sonificación funciona
-
-NASA ya ha explorado este camino con su programa *Universe of Sound*, que traduce datos de telescopios espaciales a sonido. Un estudio publicado en 2024 en *Frontiers in Communication* encuestó a **3,184 personas**, videntes y con discapacidad visual, y encontró:
-
-- Mejoras significativas en el aprendizaje percibido.
-- Respuestas positivas respecto al disfrute de la experiencia.
-- Que involucrar varios sentidos genera confianza en los datos científicos, amplía el acceso y aumenta la conciencia sobre accesibilidad, tanto en público vidente como en personas ciegas o con baja visión.
-
-### Más allá de la accesibilidad
-
-- **Comunicación de riesgo:** un sonido que se vuelve más tenso cuando empeora una sequía o crece una anomalía se entiende sin interpretar una gráfica ni una escala de colores.
-- **Educación:** escuchar décadas de datos en unos segundos deja una impresión más duradera que una tabla de cifras.
-- **Conexión emocional:** el cambio ambiental deja de ser un número abstracto y se convierte en algo que se percibe.
-
-## ¿Qué hace la aplicación?
-
-| Sección | Descripción |
+| Section | Description |
 |---|---|
-| **Home** (`/`) | Presenta el proyecto y cómo usar el jukebox. |
-| **Upload image** (`/cargar-imagen`) | Formulario para agregar una imagen nueva con título, ubicación y descripción. Valida el formato (PNG, JPG, GIF, WEBP, BMP) y el tamaño (máx. 10 MB). |
-| **Playlist** (`/playlist`) | El jukebox: eliges una imagen y la escuchas como melodía, con un marcador que muestra qué zona de la imagen está sonando. |
-| **About us** (`/about`) | Presentación del equipo. |
+| **Home** (`/`) | Present the project and how to use it |
+| **Upload image** (`/cargar-image`) | To add a new image in format (PNG, JPG, GIF, WEBP, BMP) and the size (max. 10 MB). |
+| **Playlist** (`/playlist`) | The jukebox: Choose and image, then the way to "listen" the image and you can active the voice. |
+| **About us** (`/about`) | Presentation of the team. |
 
-### Cómo se convierte una imagen en sonido
+### How to change the image to sound?
+The server reduces each image to a 96 × 64 grid, measures the color, brightness and texture of each area, and turns them into notes of the major pentatonic scale (C, D, E, G, A). We chose this scale because it almost never sounds dissonant, so any image produces a pleasant melody.
 
-El servidor reduce cada imagen a una rejilla de 96 × 64 zonas, mide su color, brillo y textura, y las convierte en notas de la **escala pentatónica mayor** (Do, Re, Mi, Sol, La). Se eligió esta escala porque casi nunca suena disonante, así que cualquier imagen produce una melodía agradable.
+**Seven playback modes:**
 
-**Siete modos de reproducción:**
-
-| # | Modo | Recorrido |
+| # | Mode | Path through the image |
 |---|---|---|
-| 1 | Columnas | De izquierda a derecha |
-| 2 | Latitudes | De arriba abajo, franja por franja |
-| 3 | Radar | Anillos del centro hacia afuera |
-| 4 | Espiral | Zonas en espiral desde el centro |
-| 5 | Espectrograma | Cada fila es una frecuencia exacta (arriba agudo, abajo grave) y el brillo es el volumen |
-| 6 | Acordes por columna | Columnas de izquierda a derecha, cada una dividida en 4 áreas que suenan juntas |
-| 7 | Acordes por latitud | Franjas de abajo hacia arriba, cada una dividida en 4 áreas que suenan juntas |
+| 1 | Columns | Left to right |
+| 2 | Latitudes | Top to bottom, strip by strip |
+| 3 | Radar | Rings from the center outward |
+| 4 | Spiral | Areas in a spiral from the center |
+| 5 | Spectrogram | Each row is an exact frequency (top = high, bottom = low) and brightness is volume |
+| 6 | Chords by column | Columns left to right, each split into 4 areas that play together |
+| 7 | Chords by latitude | Strips bottom to top, each split into 4 areas that play together |
 
-**Qué representa cada sonido:**
+**What represent each sound?**
 
-| Modos de notas (1–4) | Modos de acordes (6–7) |
+| Note mode (1–4) | Chord modes (6–7) |
 |---|---|
-| **Brillo → altura:** más claro = más agudo | **Color cálido/frío → altura:** más cálido = más grave |
-| **Saturación → volumen:** colores intensos = más fuerte | **Brillo → volumen:** zonas oscuras casi no suenan |
-| **Posición → izquierda/derecha** (opcional) | **Cada área → su propia octava** (Do3 a Do6) |
-| **Textura → ritmo** (opcional): zonas con detalle = notas rápidas y percusión; zonas lisas = notas largas | **Textura → ritmo** del acorde completo (opcional) |
+| **Brightness:** lighter = higher | **Warm/cool color:** warmer = lower |
+| **Saturation:** Intense colors = louder | **Brightness -> volumen:** dark areas barely audible |
+| **Position:** (optional) | **Each area → its own octave** (C3 to C6) |
+| **Texture/rythm** (optional): areas with details = fast notes and percussion; smooth areas = long notes | **Texture/rythm:** of the whole chord (optional) |
 
-### Accesibilidad
+### Accesibility
 
-El jukebox se puede usar completo **solo con el teclado** e incluye:
+The jukebox can be used entirely with the keyboard alone and includes:
+- Voice guide (the browser's speech synthesis) that describes the image, the mode and how to listen to it.
+- Screen reader announcements through an aria-live region.
+- High-contrast view that hides purely visual elements and enlarges text.
+- Interface sounds that confirm each action (play, change image, change view).
 
-- **Guía por voz** (síntesis de voz del navegador) que narra la imagen, el modo y cómo escucharlo.
-- **Mensajes para lectores de pantalla** mediante una región `aria-live`.
-- **Vista de alto contraste** que oculta los elementos puramente visuales y agranda el texto.
-- **Sonidos de interfaz** que confirman cada acción (reproducir, cambiar de imagen, cambiar de vista).
-
-| Tecla | Acción |
+| Key | Action |
 |---|---|
-| `Espacio` | Reproducir / pausar |
-| `←` `→` | Imagen anterior / siguiente |
-| `1`–`7` | Elegir modo de reproducción |
-| `R` | Siguiente modo |
-| `G` | Repetir la guía de cómo escuchar |
-| `T` | Activar/desactivar ritmo por textura |
-| `E` | Activar/desactivar sonido izquierda/derecha |
-| `V` | Activar/desactivar guía por voz |
-| `B` | Mostrar/ocultar barras de sonido |
-| `M` | Vista normal / alto contraste |
+| `Espacio` | Play / pause |
+| `←` `→` | Previous / next Image |
+| `1`–`7` | Choose playback mode |
+| `R` | Next mode |
+| `G` | Repete the listening guide |
+| `T` | Activate/Desactivate texture |
+| `E` | Active/Desactivate right/left sound|
+| `V` | Activate/Desactivate sound |
+| `B` | Hide/show sound bars |
+| `M` | Normal/ high-contrast view |
 
-## Imágenes incluidas
+## Included images
 
-La playlist incluye cinco visualizaciones globales de NASA:
+The playlist included 5 global NASA visualization
 
-1. GEOS-FP Near-Surface Humidity (humedad cerca de la superficie)
-2. GEOS-FP Near-Surface Temperature (temperatura cerca de la superficie)
-3. Near Surface Ozone (O₃) (ozono cerca de la superficie)
-4. GEOS-FP Precipitation and Clouds (precipitación y nubes)
-5. Global Sea Surface Currents and Temperature (corrientes y temperatura del mar)
+1. GEOS-FP Near-Surface Humidity
+2. GEOS-FP Near-Surface Temperature
+3. Near Surface Ozone (O₃)
+4. GEOS-FP Precipitation and Clouds
+5. Global Sea Surface Currents and Temperature
 
 <!-- Agregar aquí el enlace a la fuente original de cada visualización (NASA SVS / Earth Information Center). -->
 
-## Instalación y uso
+## Instalation and usage
 
-Requisitos: **Python 3.10 o superior**.
+Requirements: **Python 3.10 or superior**.
 
 ```bash
 # 1. Clonar el repositorio
@@ -122,28 +115,28 @@ pip install -r requirements.txt
 python app.py
 ```
 
-Abre **http://127.0.0.1:5000** en el navegador y usa audífonos para una mejor experiencia.
+Open **http://127.0.0.1:5000** in your browser. Headphones are recommended for the best experience.
 
-### Agregar imágenes
+### ADDING IMAGES
 
-- **Desde la aplicación:** entra a *Upload image*, llena el formulario y la imagen aparecerá en la playlist.
-- **A mano:** copia la imagen a `static/Imagenes/` y agrega su entrada (`id`, `titulo`, `ubicacion`, `descripcion`, `archivo`) en `config/imagenes.json`.
+- From the app: go to Upload image, fill in the form, and the image will appear in the playlist.
+- Manually: copy the image to static/Imagenes/ and add its entry (id, titulo, ubicacion, descripcion, archivo) to config/imagenes.json.
 
-Para mostrar la foto del equipo en *About us*, guárdala como `static/equipo/equipo.jpg` (también acepta `.jpeg`, `.png` o `.webp`).
+To show the team photo on About us, save it as static/equipo/equipo.jpg (.jpeg, .png and .webp also work).
 
-## Estructura del proyecto
+## Project Architecture
 
 ```
 The-Earth-Information-Jukebox/
-├── app.py                  # Servidor Flask: rutas, carga de imágenes y sonificación
-├── requirements.txt        # Dependencias (Flask, Pillow)
+├── app.py                  # Flask server: routes, image upload and sonification
+├── requirements.txt        # Dependencies (Flask, Pillow)
 ├── config/
-│   └── imagenes.json       # Título, ubicación, descripción y archivo de cada imagen
+│   └── imagenes.json       # Title, location, description and file of each image
 ├── static/
-│   ├── Imagenes/           # Visualizaciones de la playlist
-│   ├── Sonidos/            # Sonidos de la interfaz
-│   └── js/app.js           # Reproductor: audio (Web Audio API), voz, teclado y visualizador
-└── templates/              # Páginas HTML (Jinja2 + Bootstrap 5)
+│   ├── Imagenes/           # Playlist visualizations
+│   ├── Sonidos/            # Interface sounds
+│   └── js/app.js           # Player: audio (Web Audio API), voice, keyboard and visualizer
+└── templates/              # HTML pages (Jinja2 + Bootstrap 5)
     ├── base.html
     ├── index.html
     ├── Jukebox.html
@@ -151,37 +144,39 @@ The-Earth-Information-Jukebox/
     └── about.html
 ```
 
-**Tecnologías:** Python · Flask · Pillow · JavaScript · Web Audio API · Web Speech API · Bootstrap 5
+Tech stack: Python · Flask · Pillow · JavaScript · Web Audio API · Web Speech API · Bootstrap 5
 
-## Siguientes pasos: hacer audible el territorio
+## Sonificating an image
 
 El impacto crece cuando la sonificación se aterriza en un lugar y un problema concretos, en lugar de quedarse en promedios globales:
 
-- Sonificar variables como **precipitación, humedad del suelo o índices de vegetación** de una cuenca o región agrícola, para que se escuche cómo evolucionó una sequía año con año.
-- **Usuarios concretos:** productores, organismos de cuenca, protección civil, escuelas y radios comunitarias.
-- **Formatos ligeros:** exportar clips de audio que puedan circular por mensajería o radio en lugares con poca conectividad o sin pantallas grandes.
-- **Alertas sonoras de sequía** para zonas agrícolas y **versiones en lenguas indígenas**.
+The impact grows when sonification is grounded in a specific place and problem, rather than staying at global averages:
 
-> *“Hacemos que los datos del agua y del clima se escuchen, para que nadie quede fuera de la información que afecta su vida y su sustento.”*
+- Sonify variables such as precipitation, soil moisture or vegetation indices for a watershed or farming region, so people can hear how a drought developed year after year.
+- Real users: farmers, watershed agencies, civil protection, schools and community radio stations.
+- Lightweight formats: export audio clips that can be shared through messaging apps or radio in places with poor connectivity or no large screens.
+- Audible drought alerts for farming regions and versions in Indigenous languages.
 
-## Principios de diseño
+> *“We make water and climate data audible, so no one is left out of the information that affects their lives and livelihoods.”*
 
-- **Honestidad científica:** cada sonido tiene un significado explícito que la aplicación explica en pantalla y por voz. Nada es un efecto decorativo.
-- **Accesibilidad real:** navegación completa con teclado, compatibilidad con lectores de pantalla y una interfaz ligera.
-- **Diseñar con las personas, no solo para ellas:** el equipo de *Universe of Sound* subraya que su trabajo se hace en colaboración con la comunidad ciega y de baja visión. Queremos probar el prototipo con personas usuarias e incorporar su retroalimentación.
+## Design principles
 
-## Equipo
+- Scientific honesty: every sound has an explicit meaning that the app explains on screen and by voice. Nothing is a decorative effect.
+- Real accessibility: full keyboard navigation, screen reader support and a lightweight interface.
+- Design with people, not just for them: the Universe of Sound team stresses that their work is done in partnership with the blind and low-vision community. We plan to test the prototype with users and incorporate their feedback.
+
+## Team
 
 Salvador Bernal · Santiago Arriaga · Eugenio Ramírez · Alejandro Áviles · Axel Alberto · Petr Skorev
 
-## Referencias
+## References
 
-1. Organización Mundial de la Salud (2019). *World report on vision.* https://www.who.int/news/item/08-10-2019-who-launches-first-world-report-on-vision
-2. CNDH (2022). *Violencia contra personas con discapacidad* (datos del Censo 2020). https://www.cndh.org.mx/sites/default/files/documentos/2022-02/Violencia_Personas_Discapacidad_1.pdf
-3. Milenio. *Ceguera, una condición que discrimina y excluye* (datos INEGI). https://www.milenio.com/ciencia-y-salud/ceguera-una-condicion-que-discrimina-y-excluye
-4. Arcand, K. K. et al. (2024). *A Universe of Sound: processing NASA data into sonifications to explore participant response.* Frontiers in Communication. https://www.frontiersin.org/journals/communication/articles/10.3389/fcomm.2024.1288896/text
-5. EurekAlert (2024). *A Universe of Sound.* https://www.eurekalert.org/news-releases/1038837
+1. World Health Organization (2019). World report on vision. https://www.who.int/news/item/08-10-2019-who-launches-first-world-report-on-vision
+2. CNDH (2022). Violencia contra personas con discapacidad [Violence against people with disabilities] (2020 Census data). https://www.cndh.org.mx/sites/default/files/documentos/2022-02/Violencia_Personas_Discapacidad_1.pdf
+3. Milenio. Ceguera, una condición que discrimina y excluye [Blindness, a condition that discriminates and excludes] (INEGI data). https://www.milenio.com/ciencia-y-salud/ceguera-una-condicion-que-discrimina-y-excluye
+4. Arcand, K. K. et al. (2024). A Universe of Sound: processing NASA data into sonifications to explore participant response. Frontiers in Communication. https://www.frontiersin.org/journals/communication/articles/10.3389/fcomm.2024.1288896/text
+5. EurekAlert (2024). A Universe of Sound. https://www.eurekalert.org/news-releases/1038837
 
 ---
 
-*Prototipo desarrollado durante el NASA Space Apps Challenge 2026. No es un producto oficial de NASA. Las visualizaciones utilizadas provienen de NASA.*
+*Prototype developed during the NASA Space Apps Challenge 2026. Not an official NASA product. The visualizations used come from NASA.*

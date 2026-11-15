@@ -146,7 +146,7 @@ The-Earth-Information-Jukebox/
 
 Tech stack: Python · Flask · Pillow · JavaScript · Web Audio API · Web Speech API · Bootstrap 5
 
-## Sonificating an image
+## Sonifying an image
 
 El impacto crece cuando la sonificación se aterriza en un lugar y un problema concretos, en lugar de quedarse en promedios globales:
 
